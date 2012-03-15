@@ -184,7 +184,6 @@ module ActiveMerchant #:nodoc:
         headers['Referer'] = (options[:password] || "activemerchant.org")
 
         response = raw_ssl_request(:post, 'https://' + API_HOST + '/auth/default.aspx', authorize_post_data(params), headers)
-
         # Authorize gives the response back by redirecting with the values in
         # the URL query
         if location = response['Location']
@@ -192,7 +191,9 @@ module ActiveMerchant #:nodoc:
         else
           return {
             'accept' => '0',
-            'errortext' => 'No Location header returned.'
+            'errortext' => 'ePay did not respond as expected. Please try again.',
+            'response_code' => response.code,
+            'response_message' => response.message
           }
         end
 
